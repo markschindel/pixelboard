@@ -4,13 +4,15 @@
 
 #define CLK 11
 #define LAT A3
+
 #define OE  9
 #define A   A0
 #define B   A1
 #define C   A2
 
 #define CMD_SIZE 512
-#define MAX_ELEMENTS 24
+#define MAX_ELEMENTS 30
+
 #define DEBUG 0
 
 //Esi
@@ -254,7 +256,7 @@ void parseCommand() {
   lineMax=strlen(line);
   
   while ((line[linePos] != '\0')&&(!parseError)) {
-    if ( (line[linePos] =='/') ){
+    if ( (line[linePos] =='/') && (line[linePos+1] !='/') ){
       line[linePos]='\0';
       linePos++;
       cc=line[linePos];
@@ -353,6 +355,9 @@ void parseCommand() {
           break;
       }
       dataStart=&line[linePos+1];
+    } else if ( (line[linePos] =='/') && (line[linePos+1] =='/') ){
+      memmove(&line[linePos],&line[linePos+1],lineMax-linePos);
+      dataLen++;
     } else {
       dataLen++;
     }
