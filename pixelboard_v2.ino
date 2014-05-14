@@ -10,7 +10,7 @@
 #define C   A2
 
 #define CMD_SIZE 512
-#define MAX_ELEMENTS 10
+#define MAX_ELEMENTS 24
 #define DEBUG 0
 
 //Esi
@@ -394,7 +394,7 @@ void setScreen(char *message) {
   screen[screenElements-1].color=hexStringtoColor("444444");
   screen[screenElements-1].isPixmap=false;  
   screen[screenElements-1].data=message;
-  screenWidth=screenWidth+strlen(screen[screenElements-1].data)*(screen[screenElements-1].textSize*6);
+  screenWidth=strlen(screen[screenElements-1].data)*(screen[screenElements-1].textSize*6);
   
 }
 
@@ -443,6 +443,8 @@ void scrollMessage() {
   // Clear background
   matrix.fillScreen(0);
 
+  if (DEBUG==2) Serial.println(scrollX);
+  
   displayMessage(scrollX);
 
   // Move text left (w/wrap)
