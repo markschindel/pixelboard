@@ -11,17 +11,21 @@ display. You can send a new command any time. It will be displayed once the
 current scroll reaches its conclusion.
 
 Controls:
-	/0 - text displayed full height
-	/1 - text displayed on line 1
-	/1 - text displayed on line 2
-	/#RRGGBB - change following text color to RRGGBB 000000 will cause color to rotate
-	/LX - display logo X (1-ESI, 2-Scotia, 3-Esso, 4-Sobeys, 5-Arduino, 6-RaspberryPi)
+	/0       - text displayed full height
+	/1       - text displayed on line 1
+	/1       - text displayed on line 2
+	/#RRGGBB - change following text color to RRGGBB
+	         - 000000 will cause color to rotate
+	/LX      - display logo X ( 1-ESI, 2-Scotia, 3-Esso, 4-Sobeys,
+                   5-Arduino, 6-RaspberryPi )
 
 Examples:
 	/l1/1Exchange/2Solutions
 
-Unfortunately you cannot currently display a / as this is the control start character
-and escape for this char is not yet implemented.
+If you want to display a /, escape it with another. // displays /
+There are limits.  512 characters in a command string. 30 screen elements.
+These limits are not well enforced by the code. "Bad things" happen when you
+break them.
 
 \q - quit
 """
@@ -53,3 +57,5 @@ while running:
 				print "unknown command\n"
 		else:
 			ser.write(msg+"\n")
+
+exit()
