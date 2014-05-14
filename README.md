@@ -9,7 +9,7 @@ pixelboard_v2.ino - Arduino sketch.
 Setup to run with the MEGA wiring shown at https://learn.adafruit.com/32x16-32x32-rgb-led-matrix/wiring-the-16x32-matrix
 
 This sketch is a memory hog and needs to be running on a Mega.
-Once running, the sketch takes serial input in the form of a 
+Once running, the sketch takes serial input (38400 N81) in the form of a 
 carriage return or newline terminated string.
 
 The string includes controls and text and will continue to scroll across the 
