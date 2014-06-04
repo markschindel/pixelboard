@@ -41,6 +41,7 @@ pixelboard.py Commands:
 """
 
 def uploadfile (logopos, filename) :
+	print("Uploading "+filename+"into slot "+logopos+"\n")
 	ser.write("/u"+logopos+"\n")
 	time.sleep(0.05)
 	sendfile(filename)
@@ -55,8 +56,9 @@ def readfile (filename) :
 	with open(filename) as f:
 		for line in f.readlines():
 			wait,msg = line.split(" ",1)
+			print("Sent:\n"+msg+"\n")
 			ser.write(msg)
-			print("waiting "+wait+"\n")
+			print("Waiting "+wait+"\n\n")
 			time.sleep(float(wait))
 		f.close()
 		ser.write("\n")
