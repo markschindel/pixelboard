@@ -1,0 +1,3 @@
+9 /1/#666600Stationary/2/#006600Scrolling second line with lots of info.
+10 /1/#660000FIXED!/2/#000066Finally found the buffer overrun issue and fixed it.
+12 /1/#000000Next/2We need to figure out some kind of timing protocol because it's too hard to sync the pixelboard display with the python host.

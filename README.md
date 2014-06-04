@@ -22,12 +22,14 @@ Controls:
 	/1       - text displayed on line 1
 	/1       - text displayed on line 2
 	/#RRGGBB - change following text color to RRGGBB
-	         - 000000 will cause color to rotate
-	/LX      - display logo X ( 1-ESI, 2-Scotia, 3-Esso, 4-Sobeys,
-                   5-Arduino, 6-RaspberryPi )
-
-Examples:
-	/l1/1Exchange/2Solutions
+	           000000 will cause color to rotate
+	/LX      - display logo X ( 1-ESI, 2-Arduino, 3-RaspberryPi )
+	/UX      - upload new logo into slot X. Will replace existing logo until reset.
+	           the next 512 bytes read are the 16x16 rgb565 pixmap.
+	           delay 100ms between the /UX command and the start of the binary data.
+	/R1      - control repeat behavior. default is no repeat /r0. to repeat after scroll set /r1
+  
+Example: /l1/1Exchange/2Solutions
 
 If you want to display a /, escape it with another. // displays /
 
