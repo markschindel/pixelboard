@@ -1,1 +1,0 @@
-avconv -vcodec png -i esso.png -vcodec rawvideo -f rawvideo -pix_fmt rgb565le esso.raw
