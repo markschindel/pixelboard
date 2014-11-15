@@ -1,6 +1,7 @@
+#!/usr/bin/python
 import serial
 import time
-import pyreadline as readline
+import readline 
 
 def help () :
 	print """
@@ -64,7 +65,7 @@ def readfile (filename) :
 		ser.write("\n")
 
 ser = serial.Serial(
-	port='COM8',
+	port='/dev/ttyACM0',
 	baudrate=38400,
 	timeout=0
 )
