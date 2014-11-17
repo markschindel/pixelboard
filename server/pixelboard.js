@@ -1,7 +1,8 @@
 var restify = require('restify');
+var sys = require('sys')
+var exec = require('child_process').exec;
 
 // State
-var next_user_id = 0;
 var users = {};
 
 // Serialport
@@ -19,6 +20,8 @@ serialPort.on("open", function () {
 function sendSerial(data) {
   serialPort.write(new Buffer(data+'\r','ascii'));
 }
+
+function displayStdout(error, stdout, stderr) { console.log(stdout) }
 
 var fs = require('fs');
 var user_token = JSON.parse(fs.readFileSync('/usr/local/src/pixelboard/server/user_token.json', 'utf8'));
@@ -45,7 +48,6 @@ server.use(function consoleDebug(req, res, next) {
   next();
 });
 
-//server.use(function authenticate(req, res, next) {
 function authenticate(req, res, next) {
   // validate custom headers x-auth-token and x-auth-user 
   if ( ( user_token[req.headers['x-auth-user']]) && ( user_token[req.headers['x-auth-user']] == req.headers['x-auth-token'] ) ) {
@@ -55,11 +57,6 @@ function authenticate(req, res, next) {
   }
 }
 
-server.get(/\/?.*/, restify.serveStatic({
-  directory: './pages',
-  default: 'pixelboard.html'
-}));
-
 server.post('/', function (req, res, next) {
   authenticate(req, res, next);
   var data = req.params.data;
@@ -68,6 +65,19 @@ server.post('/', function (req, res, next) {
   sendSerial(data);
   return next();
 });
+
+server.post('/shutdown',function (req, res, next) {
+  authenticate(req, res, next);
+  res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
+  res.end(JSON.stringify("Halting the host!"));
+  exec('halt', displayStdout);
+  return next();
+});
+
+server.get(/\/?.*/, restify.serveStatic({
+  directory: './pages',
+  default: 'pixelboard.html'
+}));
 
 server.listen(88, function () {
   console.log('%s listening at %s', server.name, server.url);

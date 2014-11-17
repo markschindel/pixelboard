@@ -14,10 +14,15 @@
 
       /* get the elements required for the post method*/
       var $form = $( this )
-      var url = $form.attr( "action" );
       var user = $("#user").val();
       var token = $("#token").val();
       var data = $("#data").val();
+
+      if ( data == 'shutdown' ) {
+        var url='/shutdown';
+      } else {
+        var url = $form.attr( "action" );
+      }
 
       var request = $.ajax({
         type: 'POST',
@@ -32,7 +37,8 @@
       });
 
       request.done(function( msg ) {
-        $( "#result" ).html( '' );
+        if ( msg == true ) msg="Success"; 
+        $( "#result" ).html( msg );
       });
        
       request.fail(function( jqXHR, textStatus ) {
