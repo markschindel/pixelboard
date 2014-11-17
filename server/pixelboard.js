@@ -23,11 +23,15 @@ function sendSerial(data) {
 var fs = require('fs');
 var user_token = JSON.parse(fs.readFileSync('/usr/local/src/pixelboard/server/user_token.json', 'utf8'));
 
-// Server
-var server = restify.createServer({
+// Setup some https server options
+var https_options = {
+  key: fs.readFileSync('/etc/ssl/self-signed/server.key'),
+  certificate: fs.readFileSync('/etc/ssl/self-signed/server.crt'),
   name: 'pixelboardserver',
   version: '1.0.0'
-});
+};
+
+var server = restify.createServer(https_options);
 
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
@@ -41,16 +45,23 @@ server.use(function consoleDebug(req, res, next) {
   next();
 });
 
-server.use(function authenticate(req, res, next) {
+//server.use(function authenticate(req, res, next) {
+function authenticate(req, res, next) {
   // validate custom headers x-auth-token and x-auth-user 
-  if ( user_token[req.headers['x-auth-user']] == req.headers['x-auth-token'] ) {
+  if ( ( user_token[req.headers['x-auth-user']]) && ( user_token[req.headers['x-auth-user']] == req.headers['x-auth-token'] ) ) {
     next();
   } else {
     next(new restify.NotAuthorizedError('Authentication Error'));
   }
-});
+}
 
-server.post('/display', function (req, res, next) {
+server.get(/\/?.*/, restify.serveStatic({
+  directory: './pages',
+  default: 'pixelboard.html'
+}));
+
+server.post('/', function (req, res, next) {
+  authenticate(req, res, next);
   var data = req.params.data;
   res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
   res.end(JSON.stringify(true));

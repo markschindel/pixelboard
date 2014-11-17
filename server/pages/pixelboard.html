@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="./js/jquery-1.11.1.min.js" type='text/javascript'></script>
+
+  <script type='text/javascript'>
+    $( document ).ready(function(){
+
+    /* Adding a handler to the submit event */
+    $("#form1").submit(function(event) {
+
+      /*Stop the usual form submission event*/
+      event.preventDefault();
+
+      /* get the elements required for the post method*/
+      var $form = $( this )
+      var url = $form.attr( "action" );
+      var user = $("#user").val();
+      var token = $("#token").val();
+      var data = $("#data").val();
+
+      var request = $.ajax({
+        type: 'POST',
+        url: url,
+        beforeSend: function (request) {
+          request.setRequestHeader("x-auth-user", user);
+          request.setRequestHeader("x-auth-token", token);
+        },
+        data: { 
+          data: data
+        }
+      });
+
+      request.done(function( msg ) {
+        $( "#result" ).html( '' );
+      });
+       
+      request.fail(function( jqXHR, textStatus ) {
+        $( "#result" ).html( jqXHR.responseText );
+      });
+
+    });
+    });
+
+  </script>
+
+</head>
+
+<body>
+
+  <form id="form1" action="./" title="form1" method="post">
+    <div>
+      <label class="title">User</label>
+      <input type="text" id="user" name="user" >
+    </div>
+    <div>
+      <label class="title">Token</label>
+      <input type="text" id="token" name="token" >
+    </div>
+    <div>
+      <label class="title">Data</label>
+      <input type="text" id="data" name="data" >
+    </div>
+    <div>
+      <input type="submit" id="submitButton" value="Ok">
+    </div>
+  </form>
+
+  <div id="result"></div>
+
+</body>
+</html>
+
