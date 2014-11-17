@@ -79,7 +79,7 @@ server.get(/\/?.*/, restify.serveStatic({
   default: 'pixelboard.html'
 }));
 
-server.listen(88, function () {
+server.listen(443, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
 
