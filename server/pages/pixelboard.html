@@ -7,7 +7,7 @@
     $( document ).ready(function(){
 
     /* Adding a handler to the submit event */
-    $("#form1").submit(function(event) {
+    $("#form-submit").submit(function(event) {
 
       /*Stop the usual form submission event*/
       event.preventDefault();
@@ -23,6 +23,8 @@
       } else {
         var url = $form.attr( "action" );
       }
+
+      $( "#result" ).html( '&nbsp;' );
 
       var request = $.ajax({
         type: 'POST',
@@ -50,29 +52,118 @@
 
   </script>
 
+<style type="text/css">
+  body {
+    font-family:arial,helvetica,sans-serif;
+    font-size:12px;
+  }
+  #wrapper {
+    width:450px;
+    margin:0px auto;
+    /* border:1px solid #bbb; */
+    padding:10px;
+  }
+  #header {
+    /* border:1px solid #bbb;
+    height:80px; */
+    text-align: center;
+    padding:10px;
+  }
+  .content {
+    margin-top:10px;
+    padding-bottom:10px;
+  }
+  /* applies to all divs within the content div */
+  #content div {
+    width:300px;
+    padding:10px;
+    /* border:1px solid #bbb; */
+    float:left;
+  }
+  #footer {
+    float:left;
+    margin-top:10px;
+    margin-bottom:10px;
+    padding:10px;
+    /* border:1px solid #bbb;
+    width: 400; */
+  }
+
+  #bottom {
+    clear:both;
+    text-align:center;
+  }
+
+  legend {
+    font.size: 20px;
+  }
+
+  label.field {
+    text-align: left;
+    width: 100px;
+    float: left;
+    font-weight: bold;
+  }
+
+  input.textbox-300 {
+    width: 300px;
+    float: left;
+  }
+
+  fieldset p {
+    clear: both;
+    padding: 5px;
+  }
+
+  .buttonHolder {
+    text-align: center;
+  }
+
+  </style>
+
 </head>
 
 <body>
 
-  <form id="form1" action="./" title="form1" method="post">
-    <div>
-      <label class="title">User</label>
-      <input type="text" id="user" name="user" >
+  <div id="wrapper">
+    <div id="header"><h1>Pixelboard Server</h1></div>
+    <div class="content">
+      <form id="form-auth" title="Authorization">
+        <fieldset>
+          <legend>Authorization</legend>
+          <p><label class="field" for="user">User</label><input class="textbox-300" type="text" id="user" name="user" /></p>
+          <p><label class="field" for="token">Token</label><input class="textbox-300" type="text" id="token" name="token" /></p>
+          <p></p>
+        </fieldset>
+      </form>
     </div>
-    <div>
-      <label class="title">Token</label>
-      <input type="text" id="token" name="token" >
+    <div class="content">
+      <form id="form-payload" title="Payload">
+        <fieldset>
+          <legend>Payload</legend>
+          <p><label class="field" for="data">Data</label><input class="textbox-300" type="text" id="data" name="data" /></p>
+          <p></p>
+        </fieldset>
+      </form>
     </div>
-    <div>
-      <label class="title">Data</label>
-      <input type="text" id="data" name="data" >
+    <div class="content">
+      <form id="form-submit" action="./" title="Ok" method="post">
+        <div class="buttonHolder">
+        <p><input type="submit" id="submitButton" value="Send" /></p>
+        </div>
+      </form>
     </div>
-    <div>
-      <input type="submit" id="submitButton" value="Ok">
+    <div class="content">
+      <form id="form-result" title="form-result">
+      <fieldset>
+        <legend>Result</legend>
+        <div id="result">&nbsp;</div>
+      </fieldset>
+      </form>
     </div>
-  </form>
-
-  <div id="result"></div>
+    <div id="footer"></div>
+    <div id="bottom">v1.0</div>
+  </div>
 
 </body>
 </html>
