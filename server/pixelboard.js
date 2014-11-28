@@ -9,6 +9,7 @@ var users = {};
 var port="/dev/ttyACM0";
 var SerialPort = require("serialport").SerialPort;
 var serialPort = new SerialPort(port, { baudrate: 38400 });
+var response = false;
 
 serialPort.on("open", function () {
   console.log(port+' opened');
@@ -17,8 +18,17 @@ serialPort.on("open", function () {
   }, 5000);
 });
 
+serialPort.on("data", function (data) {
+  console.log('received: '+data );
+  response=data;
+});
+
 function sendSerial(data) {
+  console.log('sending: '+data);
+  response = false;
   serialPort.write(new Buffer(data+'\r','ascii'));
+  while (response == false) ;
+  return(response)
 }
 
 function displayStdout(error, stdout, stderr) { console.log(stdout) }
@@ -60,9 +70,13 @@ function authenticate(req, res, next) {
 server.post('/', function (req, res, next) {
   authenticate(req, res, next);
   var data = req.params.data;
-  res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
-  res.end(JSON.stringify(true));
-  sendSerial(data);
+  pixelboardResponse = sendSerial(data);
+  if ( pixelboardResponse = 'Ok' ) {
+    res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
+    res.end(JSON.stringify(true));
+  } else {
+    res.send(409, new Error('pixelboardResponse: '+pixelboardResponse))
+  }
   return next();
 });
 
