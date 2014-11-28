@@ -141,8 +141,13 @@ void readCommand() {
     if (ipos < CMD_SIZE) {
       if ((c=='\n')||(c=='\r')) {
         input[ipos]='\0';
-        strcpy(command,input);
         ipos=0;
+        if(doneScroll) {
+          strcpy(command,input);
+          sendResponse("Ok");
+        } else {
+          sendResponse("Busy");
+        }
       } else {
         input[ipos++]=c;
       }
@@ -151,6 +156,10 @@ void readCommand() {
       ipos=0;
     }
   }
+}
+
+void sendResponse( char * message) {
+  Serial.println(message);        
 }
 
 void uploadLogo(char logoIndex) {
