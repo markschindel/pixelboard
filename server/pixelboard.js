@@ -9,26 +9,33 @@ var users = {};
 var port="/dev/ttyACM0";
 var SerialPort = require("serialport").SerialPort;
 var serialPort = new SerialPort(port, { baudrate: 38400 });
-var response = false;
+var okToSend = false;
 
 serialPort.on("open", function () {
   console.log(port+' opened');
   setTimeout(function() {
     console.log('pixelboard ready');
   }, 5000);
+  okToSend = true;
 });
 
 serialPort.on("data", function (data) {
   console.log('received: '+data );
-  response=data;
+  if (data = "Ok") {
+    okToSend = true;
+  } else {
+    okToSend = false;
+  }
 });
 
 function sendSerial(data) {
-  console.log('sending: '+data);
-  response = false;
-  serialPort.write(new Buffer(data+'\r','ascii'));
-  while (response == false) ;
-  return(response)
+  if (okToSend) {
+    console.log('sending: '+data);
+    serialPort.write(new Buffer(data+'\r','ascii'));
+  } else {
+    console.log('busy: not sending '+data);
+  }
+  return(okToSend)
 }
 
 function displayStdout(error, stdout, stderr) { console.log(stdout) }
@@ -70,12 +77,11 @@ function authenticate(req, res, next) {
 server.post('/', function (req, res, next) {
   authenticate(req, res, next);
   var data = req.params.data;
-  pixelboardResponse = sendSerial(data);
-  if ( pixelboardResponse = 'Ok' ) {
+  if ( sendSerial(data); ) {
     res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
     res.end(JSON.stringify(true));
   } else {
-    res.send(409, new Error('pixelboardResponse: '+pixelboardResponse))
+    res.send(409, new Error('pixelboardResponse: Busy'))
   }
   return next();
 });
